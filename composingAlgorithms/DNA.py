@@ -33,9 +33,10 @@ class DNA:
 
         score = 0
 
-        score += 1 - abs(self.composition_parameters.get_melody_to_silence_ratio() - self.calculate_melody_percentage())
-        score += 16 - abs(self.composition_parameters.get_average_note_length() - self.calculate_average_note_length())
-        score += 24 - abs(self.composition_parameters.get_average_interval() - self.calculate_average_interval())
+        #score += 1 - abs(self.composition_parameters.get_melody_to_silence_ratio() - self.calculate_melody_percentage())
+        score += (16 - abs(self.composition_parameters.get_average_note_length() - self.calculate_average_note_length()))/16
+        score += (25 - abs(self.composition_parameters.get_average_interval() - self.calculate_average_interval()))/25
+        #print(self.calculate_average_note_length())
         score += 1 - abs(self.composition_parameters.get_melody_to_harmony_fit() - self.calculate_melody_to_harmony_fit())
 
         self.fitness = score
@@ -163,6 +164,7 @@ class DNA:
                 for note in self.underlying_harmony[i].get_notes():
 
                     if NoteUtils.are_note_values_the_same_note(int(note_playing), note.get_note_value()):
+                        chord_tones += 1
                         melody_elements += 1
                         break
 
@@ -170,6 +172,7 @@ class DNA:
                 for note in self.underlying_harmony[i].get_notes():
 
                     if NoteUtils.are_note_values_the_same_note(int(note_playing), note.get_note_value()):
+                        chord_tones += 1
                         melody_elements += 1
                         break
 

@@ -84,7 +84,7 @@ class Population:
                 best_fitness_score = dna.get_fitness()
                 best_fitness_dna = dna
 
-        if best_fitness_score > 41 or self.generations > 75:
+        if best_fitness_score > 2.6 or self.generations > 75:
             self.finished = True
 
         self.max_fitness_score = best_fitness_score

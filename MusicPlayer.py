@@ -62,13 +62,19 @@ for part in song.get_structure_list():
         if modulo_4 == 3:
             arpeggio_note = 1
 
+        for note in chord_progression[i].get_notes():
+            if note.is_extended:
+                notes_to_extend.add(note.get_note_value())
+            else:
+                notes_to_play.add(note.get_note_value())
+
         if not melody_line[i].get_note_value() == -1:
             if melody_line[i].is_note_extended():
                 notes_to_extend.add(melody_line[i].get_note_value())
             else:
                 notes_to_play.add(melody_line[i].get_note_value())
 
-        notes_to_play.add(chord_progression[i].get_notes()[arpeggio_note].get_note_value())
+        #notes_to_play.add(chord_progression[i].get_notes()[arpeggio_note].get_note_value())
 
         notes_to_stop_playing = notes_playing - notes_to_extend
         notes_playing = (notes_to_play | notes_to_extend)
@@ -82,7 +88,7 @@ for part in song.get_structure_list():
         print("on: ", notes_to_play)
         print("off: ", notes_to_stop_playing)
 
-        time.sleep(0.25)
+        time.sleep(0.33)
 
     for note in notes_playing:
         out_port.send(mido.Message('note_off', note=note))
