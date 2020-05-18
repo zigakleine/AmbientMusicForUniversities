@@ -2,6 +2,7 @@
 import mido
 import time
 
+from MusicComposer import MusicComposer
 from songStructure.Note import Note
 from songStructure.Song import Song
 from utils.ChordUtils import ChordUtils
@@ -29,7 +30,7 @@ outputs = mido.get_output_names()
 print(outputs)
 out_port = mido.open_output(outputs[0])
 
-
+'''
 chord_progression = []
 melody_line = []
 
@@ -81,19 +82,39 @@ for i in range(4):
         chord_progression.append(
             ChordUtils.create_chord_from_root_note_value(chord_root_value, chord_quality, is_extended))
         melody_line.append(Note(current_note_value))
-
+'''
 
 notes_to_play = set()
 notes_to_extend = set()
 notes_to_stop_playing = set()
 notes_playing = set()
 
-for i in range(4):
+composer = MusicComposer()
+song = composer.generate_new_song()
+
+for part in song.get_structure_list():
+
+    chord_progression = part.get_harmony_line()
+    melody_line = part.get_melody_line()
+    print(part.name)
+
     for i in range(len(chord_progression)):
 
         notes_to_play = set()
         notes_to_extend = set()
         notes_to_stop_playing = set()
+
+        modulo_4 = i % 4
+        arpeggio_note = 0
+
+        if modulo_4 == 0:
+            arpeggio_note = 0
+        if modulo_4 == 1:
+            arpeggio_note = 1
+        if modulo_4 == 2:
+            arpeggio_note = 2
+        if modulo_4 == 3:
+            arpeggio_note = 1
 
         if not melody_line[i].get_note_value() == -1:
             if melody_line[i].is_note_extended():
@@ -101,14 +122,9 @@ for i in range(4):
             else:
                 notes_to_play.add(melody_line[i].get_note_value())
 
-        for note in chord_progression[i].get_notes():
-            if note.is_note_extended():
-                notes_to_extend.add(note.get_note_value())
-            else:
-                notes_to_play.add(note.get_note_value())
+        notes_to_play.add(chord_progression[i].get_notes()[arpeggio_note].get_note_value())
 
-        notes_to_stop_playing = notes_playing - (notes_to_extend | notes_to_play)
-
+        notes_to_stop_playing = notes_playing - notes_to_extend
         notes_playing = (notes_to_play | notes_to_extend)
 
         for note in notes_to_stop_playing:
@@ -117,16 +133,10 @@ for i in range(4):
         for note in notes_to_play:
             out_port.send(mido.Message('note_on', note=note))
 
-
-
         print("on: ", notes_to_play)
         print("off: ", notes_to_stop_playing)
 
-
-        # msg1 = mido.Message('note_on', note=60)
-        # out_port.send(msg1)
-
-        time.sleep(0.33)
+        time.sleep(0.25)
 
     for note in notes_playing:
         out_port.send(mido.Message('note_off', note=note))

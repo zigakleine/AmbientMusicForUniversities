@@ -11,7 +11,7 @@
 # # 3.2 pick 2 parents -> probability of picking corresponds to fitness score
 # # 3.3 make a new element trough crossover and mutation
 # # 3.3 add element to the new population
-
+'''
 import random
 import time
 
@@ -179,7 +179,7 @@ class DNA:
         self.set_genes(mutated_genes)
 
 
-gen_alg = GeneticAlgorithm("abcdefghijklmnopqrstuvxyz", 0.008, 900)
+gen_alg = GeneticAlgorithm("abcdefghijklmnopqrstuvxyzabcdefghijklmnopqrstuvxyz", 0.008, 900)
 gen_alg.find_solution()
 
-
+'''

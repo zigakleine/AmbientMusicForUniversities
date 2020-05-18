@@ -69,5 +69,14 @@ class NoteUtils:
 
         return note_base_value + (note_octave + 1) * 12
 
+    @classmethod
+    def transpose_note_value_to_octave(cls, note_value, new_octave):
 
+        note_name = cls.get_note_name_from_note_value(note_value)
+        new_note_value = cls.get_note_value_from_note_name_and_octave(note_name, new_octave)
 
+        return new_note_value
+
+    @classmethod
+    def are_note_values_the_same_note(cls, note_value_1, note_value_2):
+        return cls.get_note_name_from_note_value(note_value_1) == cls.get_note_name_from_note_value(note_value_2)

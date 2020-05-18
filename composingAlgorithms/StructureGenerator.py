@@ -1,9 +1,32 @@
-'''
-import re
 import random
+import re
 
 
-class ContextFreeGrammar:
+class StructureGenerator:
+
+    structure_production_rules = {
+
+        "<structure>": ["<intro><body>", "<body><outro>", "<intro><body><outro>"],
+        "<intro>": ["A", "B"],
+        "<outro>": ["A", "B"],
+        "<body>": ["<part-one><part-two>", "<part-one><part-two><part-three>"],
+        "<part-one>": ["A", "AB", "AA"],
+        "<part-two>": ["A", "AB", "BA", "BB", "B", "CB", "AC"],
+        "<part-three>": ["A", "AC", "CA", "CC", "C", "CB", "BC"],
+
+    }
+
+    start_symbol = "<structure>"
+
+    @classmethod
+    def generate_structure(cls):
+        structure_cfg = ContextFreeGrammarStructure(cls.start_symbol, cls.structure_production_rules)
+        generated_structure = structure_cfg.expand()
+
+        return generated_structure
+
+
+class ContextFreeGrammarStructure:
 
     def __init__(self, start_symbol, production_rules):
         self.start_symbol = start_symbol
@@ -29,40 +52,3 @@ class ContextFreeGrammar:
                 selected_production = selected_production.replace(non_terminal, expanded_non_terminal)
 
         return selected_production
-
-
-production_rules_1 = {
-    "<start>": ["Today is a <adj> day. The sun shines and <animal_noise>."],
-    "<adj>": ["beautiful", "nice", "wonderful", "good"],
-    "<animal_noise>": ["birds are chirping", "birds are singing", "dogs are barking", "cats are purring"]
-
-}
-
-start_symbol_1 = "<start>"
-
-production_rules_2 = {
-
-    "<S>": ["<S><S>", "()", "(<S>)", "[]", "[<S>]"],
-
-}
-
-start_symbol_2 = "<S>"
-
-
-production_rules_3 = {
-
-    "<start>": ["<start> C", "<start> D", "<start> E", "<start> F", "<start> G", "<start> A", "<start> B", ""],
-
-}
-
-start_symbol_3 = "<start>"
-
-cfg = ContextFreeGrammar(start_symbol_1, production_rules_1)
-print(cfg.expand())
-
-cfg_2 = ContextFreeGrammar(start_symbol_2, production_rules_2)
-print(cfg_2.expand())
-
-cfg_3 = ContextFreeGrammar(start_symbol_3, production_rules_3)
-print(cfg_3.expand())
-'''
