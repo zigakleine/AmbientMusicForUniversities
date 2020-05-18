@@ -33,10 +33,9 @@ class DNA:
 
         score = 0
 
-        #score += 1 - abs(self.composition_parameters.get_melody_to_silence_ratio() - self.calculate_melody_percentage())
+        score += 1 - abs(self.composition_parameters.get_melody_to_silence_ratio() - self.calculate_melody_percentage())
         score += (16 - abs(self.composition_parameters.get_average_note_length() - self.calculate_average_note_length()))/16
         score += (25 - abs(self.composition_parameters.get_average_interval() - self.calculate_average_interval()))/25
-        #print(self.calculate_average_note_length())
         score += 1 - abs(self.composition_parameters.get_melody_to_harmony_fit() - self.calculate_melody_to_harmony_fit())
 
         self.fitness = score
