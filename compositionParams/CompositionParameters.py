@@ -4,9 +4,9 @@ class CompositionParameters:
 
         # melody parameters
         self.melody_to_harmony_fit = 0.9  # 1
-        self.average_note_length = 1.5  # 2 --> range: 0-16
-        self.melody_to_silence_ratio = 0.9  # 3 -> range: 0-1
-        self.average_interval = 2.3  # 4
+        self.average_note_length = 2  # 2 --> range: 0-16
+        self.melody_to_silence_ratio = 0.8  # 3 -> range: 0-1
+        self.average_interval = 2  # 4
         self.resolution_intensity = 0  # 5
         self.rhythmic_variation = 0  # 6
         self.rhythmic_range = 0  # 7

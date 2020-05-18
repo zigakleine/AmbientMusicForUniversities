@@ -24,18 +24,11 @@ class MelodyGenerator:
             b_melody = genetic_algorithm.generate_new_melody(
                 melody_motif_form_length, key_root_note, octave, mode, composition_parameters, harmony_parts["b_harmony"])
 
-            c_melody = genetic_algorithm.generate_new_melody(
-                melody_motif_form_length, key_root_note, octave, mode, composition_parameters, harmony_parts["a_harmony_r"])
-
-            d_melody = genetic_algorithm.generate_new_melody(
-                melody_motif_form_length, key_root_note, octave, mode, composition_parameters, harmony_parts["b_harmony_e"])
-
             a_melody_list = cls.convert_melody_to_note_list(a_melody)
             b_melody_list = cls.convert_melody_to_note_list(b_melody)
-            c_melody_list = cls.convert_melody_to_note_list(c_melody)
-            d_melody_list = cls.convert_melody_to_note_list(d_melody)
 
-            whole_melody_list = a_melody_list + b_melody_list + c_melody_list + d_melody_list
+
+            whole_melody_list = a_melody_list + b_melody_list + a_melody_list + b_melody_list
 
             return whole_melody_list
 

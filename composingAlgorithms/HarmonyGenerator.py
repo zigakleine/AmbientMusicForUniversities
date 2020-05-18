@@ -13,10 +13,13 @@ class HarmonyGenerator:
 
     @classmethod
     def generate_harmony(cls, type_of_progression, length):
-        harmony_cfg = ContextFreeGrammarHarmony(cls.start_symbol, cls.harmony_production_rules, length)
-        generated_structure = harmony_cfg.expand()
+        harmony_cfg = ContextFreeGrammarHarmony(cls.start_symbol, cls.harmony_production_rules, length //2)
 
-        return generated_structure
+        generated_structure = harmony_cfg.expand()
+        print(generated_structure)
+        whole_structure = generated_structure + "," + generated_structure
+
+        return whole_structure
 
 class ContextFreeGrammarHarmony:
 

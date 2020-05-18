@@ -30,60 +30,6 @@ outputs = mido.get_output_names()
 print(outputs)
 out_port = mido.open_output(outputs[0])
 
-'''
-chord_progression = []
-melody_line = []
-
-# a four bar song to test the MusicPlayer implementation
-for i in range(4):
-
-    chord_root_value = None
-    chord_quality = None
-
-    if i == 0:
-        chord_root_value = 36 + 12
-        chord_quality = "MAJOR"
-    if i == 1:
-        chord_root_value = 41 + 12
-        chord_quality = "MAJOR"
-    if i == 2:
-        chord_root_value = 43 + 12
-        chord_quality = "MAJOR"
-    if i == 3:
-        chord_root_value = 45 + 12
-        chord_quality = "MINOR"
-
-    for j in range(8):
-        is_extended = None
-        current_note_value = None
-
-        if j == 0:
-            is_extended = False
-        else:
-            is_extended = True
-
-        modulo_4 = j % 4
-        third_interval = None
-
-        if chord_quality == "MAJOR":
-            third_interval = 4
-        else:
-            third_interval = 3
-
-        if modulo_4 == 0:
-            current_note_value = chord_root_value + 12
-        elif modulo_4 == 1:
-            current_note_value = chord_root_value + 12 + third_interval
-        elif modulo_4 == 2:
-            current_note_value = chord_root_value + 12 + 7
-        elif modulo_4 == 3:
-            current_note_value = chord_root_value + 12 + third_interval
-
-        chord_progression.append(
-            ChordUtils.create_chord_from_root_note_value(chord_root_value, chord_quality, is_extended))
-        melody_line.append(Note(current_note_value))
-'''
-
 notes_to_play = set()
 notes_to_extend = set()
 notes_to_stop_playing = set()
