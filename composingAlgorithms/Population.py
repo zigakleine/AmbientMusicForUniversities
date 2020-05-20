@@ -6,7 +6,8 @@ from composingAlgorithms.DNA import DNA
 class Population:
 
     def __init__(self, mutation_rate, population_size,
-                 melody_length, key_root_note, octave, mode, composition_parameters, underlying_harmony):
+                 melody_length, key_root_note, octave, mode, composition_parameters, underlying_harmony,
+                 is_continuation, is_variation, do_resolution, target_melody, note_to_continue):
 
         self.mutation_rate = mutation_rate
         self.population_size = population_size
@@ -18,9 +19,17 @@ class Population:
         self.composition_parameters = composition_parameters
         self.underlying_harmony = underlying_harmony
 
+        self.is_continuation = is_continuation
+        self.is_variation = is_variation
+        self.do_resolution = do_resolution
+        self.target_melody = target_melody
+        self.note_to_continue = note_to_continue
+
         self.population = []
         for i in range(population_size):
-            new_dna = DNA(self.melody_length, self.key_root_note, self.octave, self.mode, self.composition_parameters, self.underlying_harmony)
+            new_dna = DNA(self.melody_length, self.key_root_note, self.octave, self.mode,
+                          self.composition_parameters, self.underlying_harmony, self.is_continuation, self.is_variation,
+                          self.do_resolution, self.target_melody, self.note_to_continue)
             new_dna.calculate_fitness()
             self.population.append(new_dna)
 
@@ -84,8 +93,39 @@ class Population:
                 best_fitness_score = dna.get_fitness()
                 best_fitness_dna = dna
 
-        if best_fitness_score > 3.7 or self.generations > 75:
+
+
+        #print("continuation intensity: ", best_fitness_dna.calculate_continuation(), best_fitness_dna.is_continuation)
+
+        #print("melody amount", best_fitness_dna.calculate_melody_amount())
+        #print("note extension amount", best_fitness_dna.calculate_note_extension_amount())
+        #print("melody to harmony fit", best_fitness_dna.calculate_melody_to_harmony_fit())
+        #print("average interval", best_fitness_dna.calculate_average_interval())
+
+        fitness_threshold = 0.95 * 5
+        if self.do_resolution:
+            fitness_threshold += 0.95
+        if self.is_continuation:
+            fitness_threshold += 0.95
+        if self.is_variation:
+            fitness_threshold += 0.7
+
+        # print("best fitness score: ", best_fitness_score)
+        #print("threshold: ", fitness_threshold)
+        # print("resolution intensity: ", best_fitness_dna.calculate_resolution_intensity(), best_fitness_dna.do_resolution)
+
+        if best_fitness_score > fitness_threshold or self.generations > 50:
             self.finished = True
+
+            print("melody amount", best_fitness_dna.calculate_melody_amount())
+            print("note extension amount", best_fitness_dna.calculate_note_extension_amount())
+            print("melody to harmony fit", best_fitness_dna.calculate_melody_to_harmony_fit())
+            print("average interval", best_fitness_dna.calculate_average_interval())
+            print("resolution intensity: ", best_fitness_dna.calculate_resolution_intensity(), best_fitness_dna.do_resolution)
+            print("continuation intensity: ", best_fitness_dna.calculate_continuation(),
+                  best_fitness_dna.is_continuation)
+            if best_fitness_dna.is_variation:
+                print("similarity: ", best_fitness_dna.calculate_similarity(), best_fitness_dna.is_variation)
 
         self.max_fitness_score = best_fitness_score
         return best_fitness_dna.get_genes()

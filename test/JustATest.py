@@ -80,11 +80,13 @@ from composingAlgorithms.StructureGenerator import StructureGenerator
 
 StructureGenerator.generate_structure()
 HarmonyGenerator.generate_harmony(8)
-'''
+
+from composingAlgorithms.DNA import DNA
 from composingAlgorithms.HarmonyGenerator import HarmonyGenerator
 from composingAlgorithms.MelodyGenerator import MelodyGenerator
 from compositionParams.CompositionParameters import CompositionParameters
 from songStructure.Part import Part
+from utils.ChordUtils import ChordUtils
 
 string = "ahahha"
 
@@ -111,19 +113,41 @@ harmony_parts = {
     "b_harmony_e": new_part.get_motif_form_harmony(4)
 }
 
-generated_melody = melody_generator.generate_melody("PERIOD", 8, harmony_parts, 60, 2, "MAJOR", CompositionParameters())
-print(generated_melody)
+# generated_melody = melody_generator.generate_melody("PERIOD", 8, harmony_parts, 60, 2, "MAJOR", CompositionParameters())
+# print(generated_melody)
+'''
+from composingAlgorithms.DNA import DNA
+from compositionParams.CompositionParameters import CompositionParameters
+from utils.ChordUtils import ChordUtils
+
+chords = []
+for i in range(8):
+    is_extended = None
+    if i == 0:
+        is_extended = False
+    else:
+        is_extended = True
+
+    chords.append(ChordUtils.create_chord_from_roman_numeral("V",1,"MAJOR", 60, is_extended))
+
+for i in range(8):
+    is_extended = None
+    if i == 0:
+        is_extended = False
+    else:
+        is_extended = True
+
+    chords.append(ChordUtils.create_chord_from_roman_numeral("I",1,"MAJOR", 60, is_extended))
+
+
+new_composition_params = CompositionParameters()
+new_dna = DNA(16, 60, 4, "MAJOR", new_composition_params, chords, False, False, False, ['79', '67', 'e', '71', '72', 'e', 'e', 'e', 'e', 'e', 'e', '72', '77', 'e', 'e', 'e'], -1)
+new_dna.set_genes(['85', '71', 'e', 'e', '78', 'e', 'e', 'e', 'e', 'e', 'e', '78', '83', 'e', 'e', 'e'])
+print(new_dna.calculate_similarity())
 
 
 
-
-
-
-
-
-
-
-
+#     print(new_dna.scale[0].get_note_value(), " ", new_dna.scale[-1].get_note_value())
 
 
 

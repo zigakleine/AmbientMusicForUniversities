@@ -48,47 +48,47 @@ class ChordUtils:
 
         if mode == "MAJOR":
             if numeral == "I":
-                chord_root_note_value = key_root_note_value_octave + scale[0].get_note_value()
+                chord_root_note_value = key_root_note_value_octave
                 chord_quality = "MAJOR"
             elif numeral == "II":
-                chord_root_note_value = key_root_note_value_octave + scale[1].get_note_value()
+                chord_root_note_value = key_root_note_value_octave + 2
                 chord_quality = "MINOR"
             elif numeral == "III":
-                chord_root_note_value = key_root_note_value_octave + scale[2].get_note_value()
+                chord_root_note_value = key_root_note_value_octave + 4
                 chord_quality = "MINOR"
             elif numeral == "IV":
-                chord_root_note_value = key_root_note_value_octave + scale[3].get_note_value()
+                chord_root_note_value = key_root_note_value_octave + 5
                 chord_quality = "MAJOR"
             elif numeral == "V":
-                chord_root_note_value = key_root_note_value_octave + scale[4].get_note_value()
+                chord_root_note_value = key_root_note_value_octave + 7
                 chord_quality = "MAJOR"
             elif numeral == "VI":
-                chord_root_note_value = key_root_note_value_octave + scale[5].get_note_value()
+                chord_root_note_value = key_root_note_value_octave + 9
                 chord_quality = "MINOR"
             elif numeral == "VII":
-                chord_root_note_value = key_root_note_value_octave + scale[6].get_note_value()
+                chord_root_note_value = key_root_note_value_octave + 11
                 chord_quality = "MINOR"
         if mode == "MINOR":
             if numeral == "I":
-                chord_root_note_value = key_root_note_value_octave + scale[0].get_note_value()
+                chord_root_note_value = key_root_note_value_octave
                 chord_quality = "MINOR"
             elif numeral == "II":
-                chord_root_note_value = key_root_note_value_octave + scale[1].get_note_value()
+                chord_root_note_value = key_root_note_value_octave + 2
                 chord_quality = "MINOR"
             elif numeral == "III":
-                chord_root_note_value = key_root_note_value_octave + scale[2].get_note_value()
+                chord_root_note_value = key_root_note_value_octave + 3
                 chord_quality = "MAJOR"
             elif numeral == "IV":
-                chord_root_note_value = key_root_note_value_octave + scale[3].get_note_value()
+                chord_root_note_value = key_root_note_value_octave + 5
                 chord_quality = "MINOR"
             elif numeral == "V":
-                chord_root_note_value = key_root_note_value_octave + scale[4].get_note_value()
+                chord_root_note_value = key_root_note_value_octave + 7
                 chord_quality = "MINOR"
             elif numeral == "VI":
-                chord_root_note_value = key_root_note_value_octave + scale[5].get_note_value()
+                chord_root_note_value = key_root_note_value_octave + 8
                 chord_quality = "MAJOR"
             elif numeral == "VII":
-                chord_root_note_value = key_root_note_value_octave + scale[6].get_note_value()
+                chord_root_note_value = key_root_note_value_octave + 10
                 chord_quality = "MAJOR"
 
         return cls.create_chord_from_root_note_value(chord_root_note_value, chord_quality, is_extended)

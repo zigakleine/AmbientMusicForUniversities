@@ -90,8 +90,8 @@ while True:
             for note in notes_to_play:
                 out_port.send(mido.Message('note_on', note=note))
 
-            print("on: ", notes_to_play)
-            print("off: ", notes_to_stop_playing)
+            #print("on: ", notes_to_play)
+            #print("off: ", notes_to_stop_playing)
 
             time.sleep(0.33)
 

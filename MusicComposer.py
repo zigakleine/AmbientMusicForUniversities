@@ -38,7 +38,7 @@ class MusicComposer:
             print("part ", part_string, ": ", harmony_string)
 
             new_part.set_harmony_string(harmony_string)
-            new_part.generate_harmony_from_harmony_string(1, self.song.get_mode(), self.song.get_key_root_note_value())
+            new_part.generate_harmony_from_harmony_string(2, self.song.get_mode(), self.song.get_key_root_note_value())
 
             harmony_parts = dict()
             if new_part.get_type_of_part() == "PERIOD":
@@ -61,7 +61,6 @@ class MusicComposer:
                 self.song.get_key_root_note_value(), 4, self.song.get_mode(), CompositionParameters())
 
             new_part.set_melody_line(generated_melody)
-            print(generated_melody)
 
             parts_dict[part_string] = new_part
 
