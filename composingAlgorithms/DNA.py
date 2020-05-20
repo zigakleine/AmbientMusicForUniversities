@@ -306,6 +306,7 @@ class DNA:
         for i in range(self.genes_length):
             if self.genes[i].isdigit():
                 first_note_value = int(self.genes[i])
+                break
 
         continuation_interval = abs(first_note_value - self.note_to_continue)
         return continuation_interval

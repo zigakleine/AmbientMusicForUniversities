@@ -93,15 +93,6 @@ class Population:
                 best_fitness_score = dna.get_fitness()
                 best_fitness_dna = dna
 
-
-
-        #print("continuation intensity: ", best_fitness_dna.calculate_continuation(), best_fitness_dna.is_continuation)
-
-        #print("melody amount", best_fitness_dna.calculate_melody_amount())
-        #print("note extension amount", best_fitness_dna.calculate_note_extension_amount())
-        #print("melody to harmony fit", best_fitness_dna.calculate_melody_to_harmony_fit())
-        #print("average interval", best_fitness_dna.calculate_average_interval())
-
         fitness_threshold = 0.95 * 5
         if self.do_resolution:
             fitness_threshold += 0.95
@@ -110,10 +101,6 @@ class Population:
         if self.is_variation:
             fitness_threshold += 0.7
 
-        # print("best fitness score: ", best_fitness_score)
-        #print("threshold: ", fitness_threshold)
-        # print("resolution intensity: ", best_fitness_dna.calculate_resolution_intensity(), best_fitness_dna.do_resolution)
-
         if best_fitness_score > fitness_threshold or self.generations > 50:
             self.finished = True
 
@@ -121,6 +108,7 @@ class Population:
             print("note extension amount", best_fitness_dna.calculate_note_extension_amount())
             print("melody to harmony fit", best_fitness_dna.calculate_melody_to_harmony_fit())
             print("average interval", best_fitness_dna.calculate_average_interval())
+            print("melody range", best_fitness_dna.calculate_melody_range())
             print("resolution intensity: ", best_fitness_dna.calculate_resolution_intensity(), best_fitness_dna.do_resolution)
             print("continuation intensity: ", best_fitness_dna.calculate_continuation(),
                   best_fitness_dna.is_continuation)
@@ -132,4 +120,3 @@ class Population:
 
     def finished(self):
         return self.finished
-
