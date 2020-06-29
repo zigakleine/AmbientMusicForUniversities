@@ -99,7 +99,7 @@ class Population:
         if self.is_continuation:
             fitness_threshold += 0.95
         if self.is_variation:
-            fitness_threshold += 0.7
+            fitness_threshold += 0.8
 
         if best_fitness_score > fitness_threshold or self.generations > 50:
             self.finished = True

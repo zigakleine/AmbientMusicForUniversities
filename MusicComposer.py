@@ -5,16 +5,21 @@ from compositionParams.CompositionParameters import CompositionParameters
 from songStructure.Part import Part
 from songStructure.Song import Song
 
+from threading import Thread
 
-class MusicComposer:
+
+class MusicComposer(Thread):
 
     possible_part_lengths = [8]
     possible_part_types = ["PERIOD"]
 
     def __init__(self):
+        Thread.__init__(self)
+
+        self.daemon = True
         self.song = None
 
-    def generate_new_song(self):
+    def run(self):
 
         self.song = Song(60, "MAJOR", 120)
 
@@ -27,6 +32,7 @@ class MusicComposer:
         parts_set = self.song.get_parts_set()
         parts_dict = dict()
         print("parts set: ", parts_set)
+
         for part_string in parts_set:
             new_part = Part("PERIOD", 8, part_string)
 
@@ -67,7 +73,5 @@ class MusicComposer:
         self.song.set_parts_dict(parts_dict)
         self.song.construct_structure_list()
 
+    def get_generated_song(self):
         return self.song
-
-    def clear_current_song(self):
-        self.song = None
