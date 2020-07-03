@@ -25,6 +25,16 @@ class DNA:
         self.target_melody = target_melody
         self.note_to_continue = note_to_continue
 
+        self.number_of_melodic_elements = 0
+        self.number_of_note_extensions = 0
+        self.melody_length = self.genes_length
+        self.number_of_chord_tones = 0
+        self.number_of_intervals = 0
+        self.interval_size_sum = 0
+        self.melody_range = 0
+        self.first_note_value = -1
+        self.resolution_intensity = 0
+
         self.generate_new_genes()
 
     def get_genes(self):
@@ -39,6 +49,7 @@ class DNA:
     def calculate_fitness(self):
 
         score = 0
+        self.calculate_melody_parameters()
 
         score += 1 - abs(self.composition_parameters.get_melody_amount() - self.calculate_melody_amount())
         score += 1 - abs(self.composition_parameters.get_note_extension_amount() - self.calculate_note_extension_amount())
@@ -173,100 +184,45 @@ class DNA:
         return new_char
 
     def calculate_note_extension_amount(self):
-
         # percentage of extension type melodic elements in all melodic elements
 
-        number_of_melodic_elements = 0
-        number_of_extensions = 0
-
-        for i in range(self.genes_length):
-
-            if self.genes[i].isdigit():
-                number_of_melodic_elements += 1
-
-            elif self.genes[i] == "e":
-                number_of_melodic_elements += 1
-                number_of_extensions += 1
-
-        if number_of_melodic_elements == 0:
+        if self.number_of_melodic_elements == 0:
             return 0
         else:
-            extension_percentage = number_of_extensions/number_of_melodic_elements
+            extension_percentage = self.number_of_note_extensions/self.number_of_melodic_elements
             return extension_percentage
 
     def calculate_melody_amount(self):
-
         # percentage of melodic elements in the whole melody
 
-        melody_elements = 0
-        all_elements = 0
-
-        for i in range(self.genes_length):
-
-            if self.genes[i].isdigit() or self.genes[i] == "e":
-                melody_elements += 1
-            all_elements += 1
-
-        melody_percentage = melody_elements/all_elements
+        melody_percentage = self.number_of_melodic_elements/self.melody_length
         return melody_percentage
 
     def calculate_melody_to_harmony_fit(self):
-
         # percentage of melodic elements that are chord tones in all melodic elements
 
-        melody_elements = 0
-        chord_tones = 0
-        note_playing = None
-
-        for i in range(self.genes_length):
-
-            if self.genes[i].isdigit():
-                melody_elements += 1
-                note_playing = self.genes[i]
-                for note in self.underlying_harmony[i].get_notes():
-
-                    if NoteUtils.are_note_values_the_same_note(int(note_playing), note.get_note_value()):
-                        chord_tones += 1
-
-                        break
-
-            elif self.genes[i] == "e":
-                melody_elements += 1
-                for note in self.underlying_harmony[i].get_notes():
-
-                    if NoteUtils.are_note_values_the_same_note(int(note_playing), note.get_note_value()):
-                        chord_tones += 1
-                        break
-
-            elif self.genes[i] == "p":
-                note_playing = -1
-
-        if melody_elements == 0:
+        if self.number_of_melodic_elements == 0:
             return 1
         else:
-            return chord_tones / melody_elements
+            return self.number_of_chord_tones / self.number_of_melodic_elements
+
+    def calculate_melody_range(self):
+        return self.melody_range
 
     def calculate_average_interval(self):
 
         # average interval size in the melody
 
-        number_of_intervals = 0
-        interval_size_sum = 0
-
-        previous_note = -1
-
-        for i in range(self.genes_length):
-            if self.genes[i].isdigit():
-                if previous_note != -1:
-                    interval_size_sum += abs(int(previous_note) - int(self.genes[i]))
-                    number_of_intervals += 1
-                previous_note = self.genes[i]
-
-        if number_of_intervals == 0:
+        if self.number_of_intervals == 0:
             return 0
         else:
-            average_interval = interval_size_sum / number_of_intervals
+            average_interval = self.interval_size_sum / self.number_of_intervals
             return average_interval
+
+    def calculate_continuation(self):
+
+        continuation_interval = abs(self.first_note_value - self.note_to_continue)
+        return continuation_interval
 
     def calculate_resolution_intensity(self):
 
@@ -296,28 +252,38 @@ class DNA:
         else:
             note_length_weight = 5
 
-        resolution_intensity = (note_length_weight * (chord_tones_in_last_note/last_note_length))/5
-        return resolution_intensity
+        self.resolution_intensity = (note_length_weight * (chord_tones_in_last_note/last_note_length))/5
+        return self.resolution_intensity
 
-    def calculate_continuation(self):
+    def calculate_melody_parameters(self):
 
-        first_note_value = - 1
-
-        for i in range(self.genes_length):
-            if self.genes[i].isdigit():
-                first_note_value = int(self.genes[i])
-                break
-
-        continuation_interval = abs(first_note_value - self.note_to_continue)
-        return continuation_interval
-
-    def calculate_melody_range(self):
-
+        note_playing = None
         highest_note = 0
         lowest_note = 128
+        first_note_found = False
 
         for i in range(self.genes_length):
+
             if self.genes[i].isdigit():
+
+                self.number_of_melodic_elements += 1
+
+                if not first_note_found:
+                    self.first_note_value = int(self.genes[i])
+                    first_note_found = True
+
+                if note_playing is not None:
+                    self.interval_size_sum += abs(int(note_playing) - int(self.genes[i]))
+                    self.number_of_intervals += 1
+
+                note_playing = self.genes[i]
+
+                for note in self.underlying_harmony[i].get_notes():
+
+                    if NoteUtils.are_note_values_the_same_note(int(note_playing), note.get_note_value()):
+                        self.number_of_chord_tones += 1
+                        break
+
                 current_note = int(self.genes[i])
                 if current_note < lowest_note:
                     lowest_note = current_note
@@ -325,18 +291,27 @@ class DNA:
                 if current_note > highest_note:
                     highest_note = current_note
 
-        melody_range = highest_note - lowest_note
-        return melody_range
+            elif self.genes[i] == "e":
+                self.number_of_melodic_elements += 1
+                self.number_of_note_extensions += 1
+
+                for note in self.underlying_harmony[i].get_notes():
+
+                    if NoteUtils.are_note_values_the_same_note(int(note_playing), note.get_note_value()):
+                        self.number_of_chord_tones += 1
+                        break
+
+            elif self.genes[i] == "p":
+                note_playing = -1
+
+        self.melody_range = highest_note - lowest_note
 
     def calculate_similarity(self):
 
         # a metric that calculates similarity between the generated melody and the target melody. Used for creating
         # variations on a motif-form
-        generated_melody_intervals_list = self.get_melody_intervals_list(self.genes)
-        generated_melody_lengths_list =  self.get_melody_lengths_list(self.genes)
-
-        target_melody_intervals_list = self.get_melody_intervals_list(self.target_melody)
-        target_melody_lengths_list = self.get_melody_lengths_list(self.target_melody)
+        generated_melody_intervals_list, generated_melody_lengths_list = self.get_melody_intervals_list_and_melody_lengths_list(self.genes)
+        target_melody_intervals_list, target_melody_lengths_list = self.get_melody_intervals_list_and_melody_lengths_list(self.target_melody)
 
         interval_distances_sum = 0
         num_of_intervals = 0
@@ -365,35 +340,27 @@ class DNA:
         similarity = 0.7*interval_similarity + 0.3*lengths_similarity
         return similarity
 
-
-    def get_melody_intervals_list(self, melody):
+    def get_melody_intervals_list_and_melody_lengths_list(self, melody):
 
         interval_list_length = len(melody) - 1
         interval_list = [None] * interval_list_length
         interval_list_index = 0
 
-        previous_note = -1
-
-        for i in range(len(melody)):
-            if melody[i].isdigit():
-                current_note = int(melody[i])
-                if previous_note != -1:
-                    interval_list[interval_list_index] = current_note - previous_note
-                    interval_list_index += 1
-                previous_note = current_note
-
-        return interval_list
-
-    def get_melody_lengths_list(self, melody):
+        previous_note = None
+        current_element = None
 
         melody_lengths_list_length = len(melody)
         melody_lengths_list = [None] * melody_lengths_list_length
         melody_lengths_list_index = -1
 
-        current_element = "none"
-
         for i in range(len(melody)):
             if melody[i].isdigit():
+                current_note = int(melody[i])
+                if previous_note is not None:
+                    interval_list[interval_list_index] = current_note - previous_note
+                    interval_list_index += 1
+                previous_note = current_note
+
                 current_element = melody[i]
                 melody_lengths_list_index += 1
                 melody_lengths_list[melody_lengths_list_index] = 1
@@ -408,15 +375,4 @@ class DNA:
             if melody[i] == "e":
                 melody_lengths_list[melody_lengths_list_index] += 1
 
-        return melody_lengths_list
-
-
-
-
-
-
-
-
-
-
-
+        return interval_list, melody_lengths_list

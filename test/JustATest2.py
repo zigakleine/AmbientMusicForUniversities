@@ -87,7 +87,7 @@ harmony_generator = HarmonyGenerator()
 harmony_string = harmony_generator.generate_harmony("PERIOD", 8)
 
 print(harmony_string)
-'''
+
 
 for i in range(5):
     if i == 0:
@@ -95,4 +95,12 @@ for i in range(5):
             print(i ," in while")
             i += 1
     print(i , " outside")
+'''
 
+b = [1,2,3]
+c = [4,5,6]
+
+a = (b,c)
+
+
+print(a[0])
