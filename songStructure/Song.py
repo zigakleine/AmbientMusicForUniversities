@@ -1,9 +1,8 @@
 class Song():
-    def __init__(self, key_root_note, mode, tempo):
+    def __init__(self, key_root_note, mode):
 
         self.key_root_note_value = key_root_note
         self.mode = mode
-        self.tempo = tempo
 
         self.structure_string = ""
         self.parts_set = None

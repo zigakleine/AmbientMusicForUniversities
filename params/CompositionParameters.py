@@ -8,13 +8,18 @@ class CompositionParameters:
         self.melody_amount = 0.9  # 3 -> range: 0-1
         self.average_interval = 2  # 4 -> range: 0-24
         self.resolution_intensity = 0.8   # 5 -> range 0-1
-        self.rhythmic_variation = 0  # 6
-        self.rhythmic_range = 0  # 7
-        self.note_variation = 0  # 8
-        self.melody_range = 12  # 9
-        self.melody_direction = 0  # 10
-        self.interval_dissonance = 0  # 11
-        self.strong_beat_emphasis = 0  # 12
+        self.rhythmic_variation = 0  # 6 # TODO
+        self.rhythmic_range = 0  # 7 TODO
+        self.melody_range = 12  # 8
+        self.interval_dissonance = 0  # 9 TODO
+        self.strong_beat_emphasis = 0  # 10 # percentage of notes that are starting on a strong beat TODO
+
+        # global parameters
+        self.mode = "MAJOR"
+        self.part_length = 8
+        self.melody_octave = 4
+        self.key = "C"
+        self.harmony_octave = 2
 
         # harmony parameters
         self.harmonic_direction = 0  # 1

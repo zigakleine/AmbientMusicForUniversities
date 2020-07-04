@@ -1,7 +1,7 @@
 from composingAlgorithms.HarmonyGenerator import HarmonyGenerator
 from composingAlgorithms.MelodyGenerator import MelodyGenerator
 from composingAlgorithms.StructureGenerator import StructureGenerator
-from compositionParams.CompositionParameters import CompositionParameters
+from params.CompositionParameters import CompositionParameters
 from songStructure.Part import Part
 from songStructure.Song import Song
 
@@ -13,15 +13,15 @@ class MusicComposer(Thread):
     possible_part_lengths = [8]
     possible_part_types = ["PERIOD"]
 
-    def __init__(self):
+    def __init__(self, composition_parameters):
         Thread.__init__(self)
-
         self.daemon = True
         self.song = None
+        self.composition_parameters = composition_parameters
 
     def run(self):
 
-        self.song = Song(60, "MAJOR", 120)
+        self.song = Song(60, "MAJOR")
 
         structure_generator = StructureGenerator()
         structure_string = structure_generator.generate_structure()
@@ -64,7 +64,7 @@ class MusicComposer(Thread):
 
             generated_melody = melody_generator.generate_melody(
                 "PERIOD", new_part.get_length(), harmony_parts,
-                self.song.get_key_root_note_value(), 4, self.song.get_mode(), CompositionParameters())
+                self.song.get_key_root_note_value(), 4, self.song.get_mode(), self.composition_parameters)
 
             new_part.set_melody_line(generated_melody)
 

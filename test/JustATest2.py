@@ -95,7 +95,7 @@ for i in range(5):
             print(i ," in while")
             i += 1
     print(i , " outside")
-'''
+
 
 b = [1,2,3]
 c = [4,5,6]
@@ -104,3 +104,27 @@ a = (b,c)
 
 
 print(a[0])
+'''
+
+
+
+class a:
+     def __init__(self):
+         self.str = "hah"
+
+class b:
+    def __init__(self, a):
+        self.a = a
+
+    def print_a(self):
+        print(self.a.str)
+
+
+aa = a()
+
+bb = b(aa)
+
+bb.print_a()
+aa.str = "huh"
+bb.print_a()
+

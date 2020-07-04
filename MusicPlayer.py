@@ -1,18 +1,24 @@
 from threading import Thread
 import mido
 import time
+import copy
 
 from MusicComposer import MusicComposer
+from params.CompositionParameters import CompositionParameters
 from songStructure.Note import Note
 from songStructure.Song import Song
 from utils.ChordUtils import ChordUtils
+from utils.TempoUtils import TempoUtils
 
 
 class MusicPlayer(Thread):
-    def __init__(self):
+    def __init__(self, music_player_params, music_composer_params, gui):
         Thread.__init__(self)
         self.daemon = True
         self.running = True
+        self.music_player_params = music_player_params
+        self.music_composer_params = music_composer_params
+        self.gui = gui
 
     def stop(self):
         self.running = False
@@ -28,8 +34,8 @@ class MusicPlayer(Thread):
         notes_to_stop_playing = set()
         notes_playing = set()
 
-        # tule bi mogu passat notr nov objekt s parametri
-        starting_song_composer_thread = MusicComposer()
+        # self.music_composer_params = self.gui.get_music_composer_params()
+        starting_song_composer_thread = MusicComposer(self.music_composer_params)
         starting_song_composer_thread.start()
         starting_song_composer_thread.join()
 
@@ -37,7 +43,8 @@ class MusicPlayer(Thread):
 
         while self.running:
 
-            next_song_thread = MusicComposer()
+            # self.music_composer_params = self.gui.get_music_composer_params()
+            next_song_thread = MusicComposer(self.music_composer_params)
             next_song_thread.start()
 
             for part in current_song.get_structure_list():
@@ -100,7 +107,7 @@ class MusicPlayer(Thread):
                     # print("on: ", notes_to_play)
                     # print("off: ", notes_to_stop_playing)
 
-                    time.sleep(0.22)
+                    time.sleep(TempoUtils.get_note_duration_from_bpm_seconds("eigth_note", self.music_player_params.get_tempo()))
 
                 for note in notes_playing:
                     out_port.send(mido.Message('note_off', note=note))

@@ -84,7 +84,7 @@ HarmonyGenerator.generate_harmony(8)
 from composingAlgorithms.DNA import DNA
 from composingAlgorithms.HarmonyGenerator import HarmonyGenerator
 from composingAlgorithms.MelodyGenerator import MelodyGenerator
-from compositionParams.CompositionParameters import CompositionParameters
+from params.CompositionParameters import CompositionParameters
 from songStructure.Part import Part
 from utils.ChordUtils import ChordUtils
 
@@ -117,7 +117,7 @@ harmony_parts = {
 # print(generated_melody)
 '''
 from composingAlgorithms.DNA import DNA
-from compositionParams.CompositionParameters import CompositionParameters
+from params.CompositionParameters import CompositionParameters
 from utils.ChordUtils import ChordUtils
 
 chords = []
