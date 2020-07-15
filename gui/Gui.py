@@ -1,11 +1,12 @@
 import tkinter as tk
 from MusicPlayer import MusicPlayer
 from gui.MyFrame import MyFrame
+from gui.SliderGroup import SliderGroup
 from params.CompositionParameters import CompositionParameters
 from params.MusicPlayerParameters import MusicPlayerParameters
 
 HEIGHT = 700
-WIDTH = 700
+WIDTH = 900
 
 
 class Gui:
@@ -43,12 +44,18 @@ class Gui:
         self.tempo_frame = MyFrame(self.frame_1.get_frame(), "#D3D3D3", "Tempo")
         self.tempo_frame.draw(relx=0.01, rely=0.02, relwidth=0.1, relheight=0.96)
 
-        self.tempo_slider_label = tk.Label(self.tempo_frame.get_frame(), text="Bpm", bg="#D3D3D3", pady=10)
-        self.tempo_slider_label.place(relx=0.05, rely=0, relwidth=0.6, relheight=0.2)
+        self.tempo_frame.get_frame().update()
+        tempo_frame_height = self.tempo_frame.get_frame().winfo_height()
+        tempo_frame_width = self.tempo_frame.get_frame().winfo_width()
+        tempo_frame_titles = ["Bpm"]
+        tempo_frame_commands = [self.on_tempo_slider_change]
+        tempo_frame_ranges = [(50, 200)]
 
-        self.tempo_slider = tk.Scale(self.tempo_frame.get_frame(), from_=200, to=50, command=self.on_tempo_slider_change, background="#D3D3D3")
-        self.tempo_slider.place(relx=0.05, rely=0.15, relwidth=0.9, relheight=0.8)
-        self.tempo_slider.set(self.music_player_params.get_tempo())
+        self.tempo_slider_group = SliderGroup(self.tempo_frame.get_frame(), 1, tempo_frame_height, tempo_frame_width,
+                                              tempo_frame_titles, tempo_frame_commands, tempo_frame_ranges)
+        self.tempo_slider_group.draw()
+
+        self.tempo_slider_group.get_slider(0).set(self.music_player_params.get_tempo())
 
         # Arpeggiator Frame
 
@@ -58,25 +65,27 @@ class Gui:
         self.arpeggiator_type_frame = tk.Frame(self.arpeggiator_frame.get_frame(), bg="#D3D3D3")
         self.arpeggiator_type_frame.place(relx=0.02, rely=0.02, relwidth=0.47, relheight=0.93)
 
-        temp = tk.StringVar()
-        temp.set("off")
+        self.arpeggiator_type_value = tk.StringVar()
+        self.arpeggiator_type_value.set("off")
         arpeggiator_types = [("Off", "off"),("Up", "up"),("Down", "down"), ("UpDown", "upDown"), ("Random", "random")]
 
         self.arpeggiator_type_frame_label = tk.Label(self.arpeggiator_type_frame, text="Arpeggiator type", bg="#D3D3D3", pady=6).pack(anchor=tk.W, fill=tk.Y)
         for label, value in arpeggiator_types:
-            tk.Radiobutton(self.arpeggiator_type_frame, text=label, value=value, variable=temp, bg="#D3D3D3", pady=4).pack(anchor=tk.W, fill=tk.Y)
+            tk.Radiobutton(self.arpeggiator_type_frame, text=label, value=value, variable=self.arpeggiator_type_value,
+                           bg="#D3D3D3", pady=4, command=self.on_arpeggiator_type_button_change).pack(anchor=tk.W, fill=tk.Y)
 
         self.arpeggiator_speed_frame = tk.Frame(self.arpeggiator_frame.get_frame(), bg="#D3D3D3")
         self.arpeggiator_speed_frame.place(relx=0.51, rely=0.02, relwidth=0.48, relheight=0.93)
 
-        temp2 = tk.StringVar()
-        temp2.set("eighth_note")
+        self.arpeggiator_speed_value = tk.StringVar()
+        self.arpeggiator_speed_value.set("eighth_note")
 
         arpeggiator_speeds = [("1/8", "eighth_note"),("1/4", "quarter_note"),("1/2", "half_note"), ("1", "whole_note")]
 
         self.arpeggiator_type_frame_label = tk.Label(self.arpeggiator_speed_frame, text="Arpeggiator speed", bg="#D3D3D3", pady=6).pack(anchor=tk.W, fill=tk.Y)
         for label, value in arpeggiator_speeds:
-            tk.Radiobutton(self.arpeggiator_speed_frame, text=label, value=value, variable=temp2, bg="#D3D3D3", pady=4).pack(anchor=tk.W, fill=tk.Y)
+            tk.Radiobutton(self.arpeggiator_speed_frame, text=label, value=value, variable=self.arpeggiator_speed_value,
+                           bg="#D3D3D3", pady=4, command=self.on_arpeggiator_speed_button_change).pack(anchor=tk.W, fill=tk.Y)
 
         # Synth controls frame
 
@@ -128,7 +137,8 @@ class Gui:
         self.player.start()
 
     def on_stop_button_clicked(self):
-        self.player.stop()
+        if self.player is not None:
+            self.player.stop()
 
     def on_tempo_slider_change(self, new_tempo):
         self.music_player_params.set_tempo(int(new_tempo))
@@ -144,6 +154,14 @@ class Gui:
 
     def set_music_composer_params(self, new_music_composer_params):
         self.music_composer_params = new_music_composer_params
+
+    def on_arpeggiator_type_button_change(self):
+        self.music_player_params.set_arpeggiation_type(self.arpeggiator_type_value.get())
+        print("type: ", self.music_player_params.get_arpeggiation_type())
+
+    def on_arpeggiator_speed_button_change(self):
+        self.music_player_params.set_arpeggiation_speed(self.arpeggiator_speed_value.get())
+        print("speed: ", self.music_player_params.get_arpeggiation_speed())
 
 
 gui = Gui()

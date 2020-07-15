@@ -1,3 +1,4 @@
+import math
 import random
 
 from utils.NoteUtils import NoteUtils
@@ -6,6 +7,7 @@ from utils.ScaleUtils import ScaleUtils
 
 class DNA:
 
+    # TODO: add a parameter called melody_range_octaves
     def __init__(self, genes_length, key_root_note, octave, mode, composition_parameters, underlying_harmony,
                  is_continuation, is_variation, do_resolution, target_melody, note_to_continue):
         self.genes = []
@@ -15,8 +17,10 @@ class DNA:
         self.octave = octave
         self.mode = mode
         self.key_root_note_octave = NoteUtils.transpose_note_value_to_octave(key_root_note, octave)
-        self.scale = ScaleUtils.generate_scale_from_key_root_value(self.key_root_note_octave, mode, 2)
         self.composition_parameters = composition_parameters
+        self.melody_range_octaves = composition_parameters.get_melody_range_octaves()
+        self.scale = ScaleUtils.generate_scale_from_key_root_value(self.key_root_note_octave, mode, self.melody_range_octaves)
+
         self.underlying_harmony = underlying_harmony
 
         self.is_continuation = is_continuation
@@ -32,8 +36,12 @@ class DNA:
         self.number_of_intervals = 0
         self.interval_size_sum = 0
         self.melody_range = 0
+        self.rhythmic_range = 0
         self.first_note_value = -1
         self.resolution_intensity = 0
+
+        self.melody_intervals_list = []
+        self.melody_lengths_list = []
 
         self.generate_new_genes()
 
@@ -53,16 +61,19 @@ class DNA:
 
         score += 1 - abs(self.composition_parameters.get_melody_amount() - self.calculate_melody_amount())
         score += 1 - abs(self.composition_parameters.get_note_extension_amount() - self.calculate_note_extension_amount())
-        score += (24 - abs(self.composition_parameters.get_average_interval() - self.calculate_average_interval()))/24
-        score += (24 - abs(self.composition_parameters.get_melody_range() - self.calculate_melody_range()))/24
+        score += ((self.melody_range_octaves*12) - abs(self.composition_parameters.get_average_interval() - self.calculate_average_interval()))/ (self.melody_range_octaves*12)
+        score += ((self.melody_range_octaves*12) - abs(self.composition_parameters.get_melody_range() - self.calculate_melody_range()))/ (self.melody_range_octaves*12)
         score += (1 - abs(self.composition_parameters.get_melody_to_harmony_fit() - self.calculate_melody_to_harmony_fit()))
 
+        # score += (self.genes_length - abs(self.composition_parameters.get_rhythmic_range() - self.calculate_rhythmic_range()))/self.genes_length
+        score += (1 - abs(self.composition_parameters.get_interval_consonance() - self.calculate_interval_consonance()))
+
         if self.do_resolution:
-            score += (1-abs(
+            score += (1 - abs(
                 self.composition_parameters.get_resolution_intensity() - self.calculate_resolution_intensity()))
         if self.is_continuation:
-            score += (24 - abs(
-                self.composition_parameters.get_average_interval() - self.calculate_continuation())) / 24
+            score += ((self.melody_range_octaves*12) - abs(
+                self.composition_parameters.get_average_interval() - self.calculate_continuation())) / (self.melody_range_octaves*12)
         if self.is_variation:
             score += self.calculate_similarity()
 
@@ -228,7 +239,6 @@ class DNA:
 
         # a metric that calculates the intensity of resolution in the last note of the melody
 
-        last_note_value = 0
         last_note_length = 0
         chord_tones_in_last_note = 0
 
@@ -257,7 +267,10 @@ class DNA:
 
     def calculate_melody_parameters(self):
 
+        self.melody_intervals_list, self.melody_lengths_list = self.get_melody_intervals_list_and_melody_lengths_list(self.genes)
+
         note_playing = None
+        note_playing_length = 0
         highest_note = 0
         lowest_note = 128
         first_note_found = False
@@ -294,6 +307,7 @@ class DNA:
             elif self.genes[i] == "e":
                 self.number_of_melodic_elements += 1
                 self.number_of_note_extensions += 1
+                note_playing_length += 1
 
                 for note in self.underlying_harmony[i].get_notes():
 
@@ -310,8 +324,11 @@ class DNA:
 
         # a metric that calculates similarity between the generated melody and the target melody. Used for creating
         # variations on a motif-form
-        generated_melody_intervals_list, generated_melody_lengths_list = self.get_melody_intervals_list_and_melody_lengths_list(self.genes)
+
         target_melody_intervals_list, target_melody_lengths_list = self.get_melody_intervals_list_and_melody_lengths_list(self.target_melody)
+
+        generated_melody_intervals_list = self.melody_intervals_list
+        generated_melody_lengths_list = self.melody_lengths_list
 
         interval_distances_sum = 0
         num_of_intervals = 0
@@ -333,9 +350,9 @@ class DNA:
             elif not (generated_melody_lengths_list[i] is None and target_melody_lengths_list[i] is None):
                 num_of_lengths += 1
 
-        interval_similarity = 1 - (interval_distances_sum / (num_of_intervals * 24))
+        interval_similarity = 1 - (interval_distances_sum / (num_of_intervals * self.melody_range_octaves*12))
 
-        lengths_similarity = 1 - (lengths_distances_sum/16)
+        lengths_similarity = 1 - (lengths_distances_sum/self.genes_length)
 
         similarity = 0.7*interval_similarity + 0.3*lengths_similarity
         return similarity
@@ -376,3 +393,46 @@ class DNA:
                 melody_lengths_list[melody_lengths_list_index] += 1
 
         return interval_list, melody_lengths_list
+
+    def calculate_rhythmic_range(self):
+
+        shortest_note = self.genes_length
+        longest_note = 0
+
+        for note_length in self.melody_lengths_list:
+            if note_length is not None:
+                if note_length > longest_note:
+                    longest_note = longest_note
+                if note_length < shortest_note:
+                    shortest_note = note_length
+            else:
+                break
+
+        rhythmic_range = longest_note - shortest_note
+        return rhythmic_range
+
+    def calculate_interval_consonance(self):
+
+        consonance_score = 0
+        intervals = 0
+
+        for interval in self.melody_intervals_list:
+            if interval is not None:
+                intervals += 1
+
+                interval_quality = abs(interval) % 12
+
+                if interval_quality == 0 or interval_quality == 7 or interval_quality == 5:
+                    consonance_score += 1
+
+                elif interval_quality == 3 or interval_quality == 4 or interval_quality == 2 or \
+                        interval_quality == 8 or interval_quality == 9:
+                    consonance_score += 0.5
+
+                elif interval_quality == 1 or interval_quality == 6 or interval_quality == 10 or interval_quality == 11:
+                    consonance_score += 0
+
+        if intervals == 0:
+            return 1
+        else:
+            return consonance_score / intervals

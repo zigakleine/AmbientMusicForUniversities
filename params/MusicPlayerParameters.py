@@ -1,7 +1,7 @@
 class MusicPlayerParameters:
 
     def __init__(self):
-        self.tempo = 120
+        self.tempo = 101
         self.arpeggiation_type = "off"
         self.arpeggiation_speed = "eighth_note"
 

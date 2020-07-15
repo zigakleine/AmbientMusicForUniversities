@@ -95,11 +95,13 @@ harmony_generator = HarmonyGenerator()
 melody_generator = MelodyGenerator()
 part_string = "A"
 
-new_part = Part("PERIOD", 8, part_string)
+new_part = Part("SENTENCE", 8, part_string)
 
 harmony_string = harmony_generator.generate_harmony(new_part.get_type_of_part(), new_part.get_length())
 
 print("part ", part_string, ": ", harmony_string)
+
+
 
 new_part.set_harmony_string(harmony_string)
 new_part.generate_harmony_from_harmony_string(1, "MAJOR", 60)
@@ -113,9 +115,12 @@ harmony_parts = {
     "b_harmony_e": new_part.get_motif_form_harmony(4)
 }
 
-# generated_melody = melody_generator.generate_melody("PERIOD", 8, harmony_parts, 60, 2, "MAJOR", CompositionParameters())
-# print(generated_melody)
+generated_melody = melody_generator.generate_melody("PERIOD", 8, harmony_parts, 60, 2, "MAJOR", CompositionParameters())
+print(generated_melody)
+
+
 '''
+
 from composingAlgorithms.DNA import DNA
 from params.CompositionParameters import CompositionParameters
 from utils.ChordUtils import ChordUtils
@@ -143,11 +148,14 @@ for i in range(8):
 new_composition_params = CompositionParameters()
 new_dna = DNA(16, 60, 4, "MAJOR", new_composition_params, chords, False, False, False, ['79', '67', 'e', '71', '72', 'e', 'e', 'e', 'e', 'e', 'e', '72', '77', 'e', 'e', 'e'], -1)
 new_dna.set_genes(['85', '71', 'e', 'e', '78', 'e', 'e', 'e', 'e', 'e', 'e', '78', '83', 'e', 'e', 'e'])
-print(new_dna.calculate_similarity())
+new_dna.calculate_melody_parameters()
+new_dna.calculate_interval_dissonance()
+
 
 
 
 #     print(new_dna.scale[0].get_note_value(), " ", new_dna.scale[-1].get_note_value())
+
 
 
 

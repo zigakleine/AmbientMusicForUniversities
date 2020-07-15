@@ -93,7 +93,7 @@ class Population:
                 best_fitness_score = dna.get_fitness()
                 best_fitness_dna = dna
 
-        fitness_threshold = 0.95 * 5
+        fitness_threshold = 0.94 * 6
         if self.do_resolution:
             fitness_threshold += 0.95
         if self.is_continuation:
@@ -101,7 +101,7 @@ class Population:
         if self.is_variation:
             fitness_threshold += 0.8
 
-        if best_fitness_score > fitness_threshold or self.generations > 50:
+        if best_fitness_score > fitness_threshold or self.generations > 100:
             self.finished = True
 
             print("melody amount", best_fitness_dna.calculate_melody_amount())

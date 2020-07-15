@@ -1,3 +1,5 @@
+import random
+
 from composingAlgorithms.HarmonyGenerator import HarmonyGenerator
 from composingAlgorithms.MelodyGenerator import MelodyGenerator
 from composingAlgorithms.StructureGenerator import StructureGenerator
@@ -10,9 +12,6 @@ from threading import Thread
 
 class MusicComposer(Thread):
 
-    possible_part_lengths = [8]
-    possible_part_types = ["PERIOD"]
-
     def __init__(self, composition_parameters):
         Thread.__init__(self)
         self.daemon = True
@@ -21,7 +20,7 @@ class MusicComposer(Thread):
 
     def run(self):
 
-        self.song = Song(60, "MAJOR")
+        self.song = Song(self.composition_parameters.get_mode(), self.composition_parameters.get_key())
 
         structure_generator = StructureGenerator()
         structure_string = structure_generator.generate_structure()
@@ -34,7 +33,11 @@ class MusicComposer(Thread):
         print("parts set: ", parts_set)
 
         for part_string in parts_set:
-            new_part = Part("PERIOD", 8, part_string)
+
+            possible_part_types = ["PERIOD", "SENTENCE"]
+            new_part_type = random.choices(possible_part_types, k=1)[0]
+            print("new part type: ", new_part_type)
+            new_part = Part(new_part_type, self.composition_parameters.get_part_length(), part_string)
 
             harmony_generator = HarmonyGenerator()
             melody_generator = MelodyGenerator()
@@ -44,7 +47,7 @@ class MusicComposer(Thread):
             print("part ", part_string, ": ", harmony_string)
 
             new_part.set_harmony_string(harmony_string)
-            new_part.generate_harmony_from_harmony_string(2, self.song.get_mode(), self.song.get_key_root_note_value())
+            new_part.generate_harmony_from_harmony_string(self.composition_parameters.get_harmony_octave(), self.song.get_mode(), self.song.get_key())
 
             harmony_parts = dict()
             if new_part.get_type_of_part() == "PERIOD":
@@ -63,8 +66,8 @@ class MusicComposer(Thread):
                 }
 
             generated_melody = melody_generator.generate_melody(
-                "PERIOD", new_part.get_length(), harmony_parts,
-                self.song.get_key_root_note_value(), 4, self.song.get_mode(), self.composition_parameters)
+                new_part.get_type_of_part(), new_part.get_length(), harmony_parts,
+                self.song.get_key(), self.composition_parameters.get_melody_octave(), self.song.get_mode(), self.composition_parameters)
 
             new_part.set_melody_line(generated_melody)
 

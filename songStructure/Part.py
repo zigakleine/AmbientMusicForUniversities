@@ -1,4 +1,7 @@
+import random
+
 from utils.ChordUtils import ChordUtils
+from utils.NoteUtils import NoteUtils
 
 
 class Part:
@@ -12,6 +15,7 @@ class Part:
         self.harmony_string = ""
         self.is_intro_or_outro = False
         self.name = name
+        self.random_arpeggiation_sequence = [random.randint(0, 2) for i in range(8)]
 
     def get_harmony_string(self):
         return self.harmony_string
@@ -19,7 +23,7 @@ class Part:
     def set_harmony_string(self, new_harmony_string):
         self.harmony_string = new_harmony_string
 
-    def generate_harmony_from_harmony_string(self, octave, mode, key_root_note_value):
+    def generate_harmony_from_harmony_string(self, octave, mode, key):
 
         chords_list = self.harmony_string.split(",")
         self.harmony_line = []
@@ -33,6 +37,8 @@ class Part:
                     is_extended = False
                 else:
                     is_extended = True
+
+                key_root_note_value = NoteUtils.get_note_value_from_note_name_and_octave(key, octave)
 
                 chord_object = ChordUtils.create_chord_from_roman_numeral(chord_numeral, octave,
                                                                           mode, key_root_note_value, is_extended)
@@ -107,3 +113,6 @@ class Part:
 
     def is_intro_outro(self):
         return self.is_intro_or_outro
+
+    def get_random_arpeggiation_sequence(self):
+        return self.random_arpeggiation_sequence

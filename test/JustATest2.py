@@ -1,3 +1,4 @@
+import math
 import random
 
 from composingAlgorithms.HarmonyGenerator import HarmonyGenerator
@@ -104,7 +105,7 @@ a = (b,c)
 
 
 print(a[0])
-'''
+
 
 
 
@@ -128,3 +129,13 @@ bb.print_a()
 aa.str = "huh"
 bb.print_a()
 
+
+a = math.inf
+
+b = 3
+
+print(a < b)
+'''
+
+arpeggio_notes = [random.randint(0, 2) for i in range(8)]
+print(arpeggio_notes)

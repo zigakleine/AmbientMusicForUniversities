@@ -1,7 +1,7 @@
 class Song():
-    def __init__(self, key_root_note, mode):
+    def __init__(self, mode, key):
 
-        self.key_root_note_value = key_root_note
+        self.key = key
         self.mode = mode
 
         self.structure_string = ""
@@ -40,12 +40,12 @@ class Song():
     def get_structure_list(self):
         return self.structure_list
 
-    # key_root_note getter & setter
-    def get_key_root_note_value(self):
-        return self.key_root_note_value
+    # key getter & setter
+    def get_key(self):
+        return self.key
 
-    def set_key_root_note_value(self, new_key_root_note_value):
-        self.key_root_note_value = new_key_root_note_value
+    def set_key(self, new_key):
+        self.key = new_key
 
     # mode getter & setter
     def get_mode(self):
@@ -54,9 +54,3 @@ class Song():
     def set_mode(self, new_mode):
         self.mode = new_mode
 
-    # tempo getter & setter
-    def get_tempo(self):
-        return self.tempo
-
-    def set_tempo(self, new_tempo):
-        self.tempo = new_tempo
