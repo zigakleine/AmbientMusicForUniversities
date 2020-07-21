@@ -20,6 +20,10 @@ def on_slider_2_change(new_value):
 def on_slider_3_change(new_value):
     print("slider 3: ", new_value)
 
+def on_radio_button_change(new_value):
+    print("radio button: ", new_value)
+
+
 root = tk.Tk()
 root.title("Ambient Music For Universities")
 canvas = tk.Canvas(root, height=HEIGHT, width=WIDTH, bg="#FFFAFA")
@@ -43,9 +47,10 @@ synth_controls_frame_width = synth_controls_frame.get_frame().winfo_width()
 synth_controls_frame_titles = ["slider 1", "slider 2", "slider 3"]
 synth_controls_frame_commands = [on_slider_1_change, on_slider_2_change, on_slider_3_change]
 synth_controls_frame_ranges = [(0, 1), (0, 1), (0, 1)]
+synth_controls_initial_values = [0, 0, 0]
 
 synth_controls_slider_group = SliderGroup(synth_controls_frame.get_frame(), 3, synth_controls_frame_height, synth_controls_frame_width,
-                                      synth_controls_frame_titles, synth_controls_frame_commands, synth_controls_frame_ranges)
+                                      synth_controls_frame_titles, synth_controls_frame_commands, synth_controls_frame_ranges, synth_controls_initial_values)
 synth_controls_slider_group.draw()
 
 
@@ -68,7 +73,7 @@ print("width: ", arpeggiator_frame.get_frame().winfo_width())
 
 
 arpeggiator_types = [("Off", "off"), ("Up", "up"), ("Down", "down"), ("UpDown", "upDown"), ("Random", "random")]
-arpeggiator_type_box = RadioButtonsBox(arpeggiator_frame.get_frame(), 220, (237/2), "Arpeggiator types",  arpeggiator_types, None)
+arpeggiator_type_box = RadioButtonsBox(arpeggiator_frame.get_frame(), 220, (237/2), "Arpeggiator types",  arpeggiator_types, on_radio_button_change)
 arpeggiator_type_box.draw()
 
 root.mainloop()

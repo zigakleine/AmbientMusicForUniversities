@@ -353,7 +353,10 @@ class DNA:
             elif not (generated_melody_lengths_list[i] is None and target_melody_lengths_list[i] is None):
                 num_of_lengths += 1
 
-        interval_similarity = 1 - (interval_distances_sum / (num_of_intervals * self.melody_range_octaves*12))
+        if num_of_intervals == 0:
+            interval_similarity = 1
+        else:
+            interval_similarity = 1 - (interval_distances_sum / (num_of_intervals * self.melody_range_octaves * 12))
 
         lengths_similarity = 1 - (lengths_distances_sum/self.genes_length)
 

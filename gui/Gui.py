@@ -18,6 +18,7 @@ class Gui:
 
     def __init__(self):
 
+        self.player = None
         self.music_player_params = MusicPlayerParameters()
         self.music_composer_params = CompositionParameters()
         self.synth_params = SynthParameters()
@@ -113,7 +114,7 @@ class Gui:
                                          self.on_chorus_speed_slider_change, self.on_chorus_depth_slider_change,
                                          self.on_reverb_liveness_slider_change, self.on_reverb_damping_slider_change
                                          ]
-        synth_controls_frame_ranges = [(0, 1), (0, 1), (0, 1), (0, 1), (1, 0.5), (1, 0)]
+        synth_controls_frame_ranges = [(0, 0.7), (0, 1), (0, 0.6), (0, 1), (1, 0.6), (1, 0)]
         synth_controls_frame_initial_values = [self.synth_params.get_delay_feedback(), self.synth_params.get_delay_mix(),
                                                self.synth_params.get_chorus_speed(), self.synth_params.get_chorus_depth(),
                                                self.synth_params.get_reverb_liveness(), self.synth_params.get_reverb_damping()]
@@ -245,15 +246,17 @@ class Gui:
 
         self.root.mainloop()
 
-        self.player = None
+
 
     def on_start_button_clicked(self):
-        self.player = MusicPlayer(self.music_player_params, self.music_composer_params, self)
-        self.player.start()
+        if self.player is None:
+            self.player = MusicPlayer(self.music_player_params, self.music_composer_params, self)
+            self.player.start()
 
     def on_stop_button_clicked(self):
         if self.player is not None:
             self.player.stop()
+            self.player = None
 
     def on_tempo_slider_change(self, new_tempo):
         self.music_player_params.set_tempo(int(new_tempo))
@@ -286,24 +289,30 @@ class Gui:
     def set_music_composer_params(self, new_music_composer_params):
         self.music_composer_params = new_music_composer_params
 
-    def on_arpeggiator_type_button_change(self, new_arpeggiator_type):
+    def on_arpeggiator_type_button_change(self):
+        new_arpeggiator_type = self.arpeggiator_type_box.get_button_value()
         self.music_player_params.set_arpeggiation_type(new_arpeggiator_type)
         print("type: ", self.music_player_params.get_arpeggiation_type())
 
-    def on_arpeggiator_speed_button_change(self, new_arpeggiator_speed):
+    def on_arpeggiator_speed_button_change(self):
+        new_arpeggiator_speed = self.arpeggiator_speed_box.get_button_value()
         self.music_player_params.set_arpeggiation_speed(new_arpeggiator_speed)
         print("speed: ", self.music_player_params.get_arpeggiation_speed())
 
-    def on_music_mode_button_change(self, new_music_mode):
+    def on_music_mode_button_change(self):
+        new_music_mode = self.music_mode_box.get_button_value()
         self.music_composer_params.set_mode(new_music_mode)
 
-    def on_melody_octave_button_change(self, new_melody_octave):
+    def on_melody_octave_button_change(self):
+        new_melody_octave = int(self.melody_octave_box.get_button_value())
         self.music_composer_params.set_melody_octave(new_melody_octave)
 
-    def on_harmony_octave_button_change(self, new_harmony_octave):
+    def on_harmony_octave_button_change(self):
+        new_harmony_octave = int(self.harmony_octaves_box.get_button_value())
         self.music_composer_params.set_harmony_octave(new_harmony_octave)
 
-    def on_part_length_button_change(self, new_part_length):
+    def on_part_length_button_change(self):
+        new_part_length = int(self.part_length_box.get_button_value())
         self.music_composer_params.set_part_length(new_part_length)
 
     def on_preset_dropdown_change(self, new_preset):
@@ -336,7 +345,6 @@ class Gui:
         libpd_float("reverb_damping", float(new_reverb_damping_value))
 
     def set_initial_synth_parameters(self):
-        libpd_float("tempo", float(self.music_player_params.get_tempo()))
         libpd_float("preset", float(self.synth_params.get_preset()))
         libpd_float("delay_feedback", float(self.synth_params.get_delay_feedback()))
         libpd_float("delay_mix", float(self.synth_params.get_delay_mix()))
@@ -344,6 +352,7 @@ class Gui:
         libpd_float("chorus_depth", float(self.synth_params.get_chorus_depth()))
         libpd_float("reverb_liveness", float(self.synth_params.get_reverb_liveness()))
         libpd_float("reverb_damping", float(self.synth_params.get_reverb_damping()))
+        libpd_float("tempo", float(self.music_player_params.get_tempo()))
 
 
 gui = Gui()
