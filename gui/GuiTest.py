@@ -3,9 +3,22 @@ import tkinter as tk
 from gui.MyFrame import MyFrame
 from gui.RadioButtonsBox import RadioButtonsBox
 from gui.SliderBox import SliderBox
+from gui.SliderGroup import SliderGroup
 
 HEIGHT = 700
 WIDTH = 700
+
+
+def on_slider_1_change(new_value):
+    print("slider 1: ", new_value)
+
+
+def on_slider_2_change(new_value):
+    print("slider 2: ", new_value)
+
+
+def on_slider_3_change(new_value):
+    print("slider 3: ", new_value)
 
 root = tk.Tk()
 root.title("Ambient Music For Universities")
@@ -25,11 +38,24 @@ synth_controls_frame.get_frame().update()
 print("height: ", synth_controls_frame.get_frame().winfo_height())
 print("width: ", synth_controls_frame.get_frame().winfo_width())
 
-for i in range(3):
-    test_slider_frame = SliderBox(synth_controls_frame.get_frame(), 220, (345/3), "Generic title", None, 0, 1)
-    test_slider_frame.draw()
+synth_controls_frame_height = synth_controls_frame.get_frame().winfo_height()
+synth_controls_frame_width = synth_controls_frame.get_frame().winfo_width()
+synth_controls_frame_titles = ["slider 1", "slider 2", "slider 3"]
+synth_controls_frame_commands = [on_slider_1_change, on_slider_2_change, on_slider_3_change]
+synth_controls_frame_ranges = [(0, 1), (0, 1), (0, 1)]
 
-arpeggiator_types = [("Off", "off"), ("Up", "up"), ("Down", "down"), ("UpDown", "upDown"), ("Random", "random")]
+synth_controls_slider_group = SliderGroup(synth_controls_frame.get_frame(), 3, synth_controls_frame_height, synth_controls_frame_width,
+                                      synth_controls_frame_titles, synth_controls_frame_commands, synth_controls_frame_ranges)
+synth_controls_slider_group.draw()
+
+
+
+synth_controls_slider_group.get_slider_with_index(0).set(0.3)
+synth_controls_slider_group.get_slider_with_index(1).set(0.3)
+synth_controls_slider_group.get_slider_with_index(2).set(0.3)
+
+
+
 
 
 arpeggiator_frame = MyFrame(frame_1.get_frame(), "#D3D3D3", "Arpeggiator")
@@ -40,7 +66,11 @@ arpeggiator_frame.get_frame().update()
 print("height: ", arpeggiator_frame.get_frame().winfo_height())
 print("width: ", arpeggiator_frame.get_frame().winfo_width())
 
+
+arpeggiator_types = [("Off", "off"), ("Up", "up"), ("Down", "down"), ("UpDown", "upDown"), ("Random", "random")]
 arpeggiator_type_box = RadioButtonsBox(arpeggiator_frame.get_frame(), 220, (237/2), "Arpeggiator types",  arpeggiator_types, None)
 arpeggiator_type_box.draw()
 
 root.mainloop()
+
+

@@ -25,7 +25,7 @@ class AudioEngine(Thread):
 						frames_per_buffer=bs * tpb)
 
 		m = PdManager(ch, ch, sr, 1)
-		libpd_open_patch('two_ops1poly.pd', './audioEngine') # './audioEngine'  '.'
+		libpd_open_patch('two_ops1poly.pd', './audioEngine')  # './audioEngine'  '.'
 		data = stream.read(bs)
 
 		while 1:
@@ -44,6 +44,15 @@ class AudioEngine(Thread):
 	def note_off(self, note):
 		libpd_noteon(1, note, 0)
 
+
+	def send_float(self, float_to_send):
+		libpd_float('spam', 42)
+
+	def send_symbol(self, symbol_to_send):
+		libpd_symbol('spam', "don't panic")
+
+
+# For testing purposes:
 #
 # a = AudioEngine()
 # a.start()
@@ -56,5 +65,5 @@ class AudioEngine(Thread):
 # 	# a.note_off()
 # 	libpd_noteon(0, 60, 0)
 # 	time.sleep(1)
-# # a.note_off()
+#
 # libpd_noteon(0, 60, 0)

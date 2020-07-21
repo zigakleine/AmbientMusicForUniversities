@@ -13,7 +13,7 @@ class RadioButtonsBox:
         self.title_frame = None
         self.title_label = None
         self.buttons_frame = None
-        self.label_font = font.Font(self.parent, family='Helvetica', size=12)
+        self.label_font = font.Font(self.parent, family='Helvetica', size=10)
         self.command = command
         self.button_value = tk.StringVar()
         self.num_of_options = len(self.labels_and_values)
@@ -42,7 +42,7 @@ class RadioButtonsBox:
 
         for label, value in self.labels_and_values:
             tk.Radiobutton(self.buttons_frame, text=label, value=value, variable=self.button_value,
-                           bg="#D3D3D3", command=self.command, pady=3).pack(anchor=tk.W, fill=tk.Y)
+                           bg="#D3D3D3", command=self.command, pady=3, font=self.label_font, wraplength=self.width, height=2).pack(anchor=tk.W, fill=tk.Y)
             #  width=int(buttons_frame_width),
             #                            height=int(buttons_frame_height/self.num_of_options)
 

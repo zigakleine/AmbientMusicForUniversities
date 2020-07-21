@@ -16,7 +16,7 @@ class SliderBox:
         self.title_label = None
         self.slider_frame = None
         self.slider = None
-        self.label_font = font.Font(self.parent, family='Helvetica', size=12)
+        self.label_font = font.Font(self.parent, family='Helvetica', size=10)
 
     def draw(self):
         self.outer_frame = tk.Frame(self.parent, bg=self.color,  # highlightbackground="black", highlightthickness=1,
@@ -27,7 +27,7 @@ class SliderBox:
         self.title_frame = tk.Frame(self.outer_frame, bg="#D3D3D3")
         self.title_frame.place(relx=0, rely=0, relwidth=1, relheight=0.3)
 
-        self.title_label = tk.Label(self.title_frame, bg=self.color, text=self.title)
+        self.title_label = tk.Label(self.title_frame, bg=self.color, text=self.title, wraplength=self.width)
         self.title_label.config(font=self.label_font)
         self.title_label.pack(fill=tk.BOTH, expand=tk.YES)
 
@@ -40,7 +40,7 @@ class SliderBox:
         slider_frame_width = self.slider_frame.winfo_width()
 
         self.slider = tk.Scale(self.slider_frame, from_=self.max_range, to=self.min_range, digits=2,
-                               resolution=0.01, background="#D3D3D3", length=0.9*slider_frame_height,
+                               resolution=0.1, background="#D3D3D3", length=0.9*slider_frame_height,
                                width=0.15*slider_frame_width, command=self.command)
         self.slider.pack(side=tk.TOP)
 

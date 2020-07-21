@@ -1,16 +1,10 @@
-import random
 from threading import Thread
 import mido
 import time
 import copy
-from pylibpd import *
 
-from MusicComposer import MusicComposer
+from composingAlgorithms.MusicComposer import MusicComposer
 from audioEngine.AudioEngine import AudioEngine
-from params.CompositionParameters import CompositionParameters
-from songStructure.Note import Note
-from songStructure.Song import Song
-from utils.ChordUtils import ChordUtils
 from utils.TempoUtils import TempoUtils
 
 
@@ -30,6 +24,8 @@ class MusicPlayer(Thread):
 
         a = AudioEngine()
         a.start()
+
+        self.gui.set_initial_synth_parameters()
 
 
         outputs = mido.get_output_names()

@@ -262,7 +262,10 @@ class DNA:
         else:
             note_length_weight = 5
 
-        self.resolution_intensity = (note_length_weight * (chord_tones_in_last_note/last_note_length))/5
+        if last_note_length == 0:
+            return 1
+        else:
+            self.resolution_intensity = (note_length_weight * (chord_tones_in_last_note/last_note_length))/5
         return self.resolution_intensity
 
     def calculate_melody_parameters(self):

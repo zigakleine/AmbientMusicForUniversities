@@ -2,6 +2,9 @@ class CompositionParameters:
 
     def __init__(self):
 
+        #harmony parameters
+        self.harmony_resolution_intensity = 0.6
+
         # melody parameters
         self.melody_to_harmony_fit = 0.8  # 1 -> range: 0-1
         self.note_extension_amount = 0.4  # 2 --> range: 0 - 0.9375
@@ -61,7 +64,7 @@ class CompositionParameters:
     # melody parameters
 
     # 1
-    def get_melody_to_harmony_fit(self):
+    def  get_melody_to_harmony_fit(self):
         return self.melody_to_harmony_fit
 
     def set_melody_to_harmony_fit(self, new_melody_to_harmony_fit):
