@@ -3,12 +3,12 @@ class SynthParameters:
 
     def __init__(self):
         self.preset = 3
-        self.delay_feedback = 0.3
-        self.delay_mix = 0.3
-        self.chorus_speed = 0.6
-        self.chorus_depth = 0.1
-        self.reverb_liveness = 0.4
-        self.reverb_damping = 0.7
+        self.delay_feedback = 0.2
+        self.delay_mix = 0.2
+        self.chorus_speed = 0.2
+        self.chorus_depth = 0.2
+        self.reverb_liveness = 0.7
+        self.reverb_damping = 0.3
 
     def get_preset(self):
         return self.preset

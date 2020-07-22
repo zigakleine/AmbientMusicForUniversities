@@ -1,4 +1,6 @@
 import tkinter as tk
+from tkinter import font
+
 from pylibpd import *
 
 from gui.DropdownBox import DropdownBox
@@ -39,11 +41,17 @@ class Gui:
 
         self.start_button = tk.Button(self.frame_3, text="Start", highlightbackground="#D3D3D3",
                                       command=self.on_start_button_clicked)
-        self.start_button.place(relx=0.76, rely=0.2, relwidth=0.1, relheight=0.6)
+        self.start_button.place(relx=0.88, rely=0.2, relwidth=0.1, relheight=0.6)
 
         self.stop_button = tk.Button(self.frame_3, text="Stop", highlightbackground="#D3D3D3",
                                      command=self.on_stop_button_clicked)
-        self.stop_button.place(relx=0.88, rely=0.2, relwidth=0.1, relheight=0.6)
+        self.stop_button.place(relx=0.76, rely=0.2, relwidth=0.1, relheight=0.6)
+
+        info_label_font = font.Font(self.frame_3, family='Helvetica', size=12)
+        self.info_label_text = tk.StringVar()
+        self.info_label = tk.Label(self.frame_3, textvariable=self.info_label_text, font=info_label_font, bg="#D3D3D3",
+                                   anchor='w')
+        self.info_label.place(relx=0.01, rely=0.2, relwidth=0.6, relheight=0.6)
 
 
         # Tempo frame
@@ -217,7 +225,7 @@ class Gui:
                                                 float(self.music_composer_params.get_resolution_intensity()),
                                                 float(self.music_composer_params.get_melody_range()),
                                                 float(self.music_composer_params.get_interval_consonance())]
-        melody_controls_frame_ranges = [(0.4, 1), (0, 0.9), (0.0, 1.0), (0, 24), (0.0, 1.0), (0, 24), (0.0, 1.0)]
+        melody_controls_frame_ranges = [(0.5, 1), (0, 0.9), (0.0, 1.0), (0, 12), (0.0, 1.0), (0, 24), (0.0, 1.0)]
 
         self.melody_controls_slider_group = SliderGroup(self.melody_controls_frame.get_frame(), 7,
                                                         melody_controls_frame_height, melody_controls_frame_width,
@@ -257,6 +265,7 @@ class Gui:
         if self.player is not None:
             self.player.stop()
             self.player = None
+            self.set_info_text_label("Stopped")
 
     def on_tempo_slider_change(self, new_tempo):
         self.music_player_params.set_tempo(int(new_tempo))
@@ -354,5 +363,5 @@ class Gui:
         libpd_float("reverb_damping", float(self.synth_params.get_reverb_damping()))
         libpd_float("tempo", float(self.music_player_params.get_tempo()))
 
-
-gui = Gui()
+    def set_info_text_label(self, new_text):
+        self.info_label_text.set(new_text)

@@ -1,5 +1,5 @@
 from threading import Thread
-import mido
+# import mido
 import time
 import copy
 
@@ -22,15 +22,17 @@ class MusicPlayer(Thread):
 
     def run(self):
 
+
         a = AudioEngine()
         a.start()
+        self.gui.set_info_text_label("Audio engine init")
 
-        self.gui.set_initial_synth_parameters()
 
 
-        outputs = mido.get_output_names()
-        print(outputs)
-        out_port = mido.open_output(outputs[0])
+
+        # outputs = mido.get_output_names()
+        # print(outputs)
+        # out_port = mido.open_output(outputs[0])
 
         notes_to_play = set()
         notes_to_extend = set()
@@ -39,20 +41,21 @@ class MusicPlayer(Thread):
 
         self.music_composer_params = self.gui.get_music_composer_params()
         starting_song_composer_thread = MusicComposer(copy.copy(self.music_composer_params))
+        self.gui.set_info_text_label("Generating song")
         starting_song_composer_thread.start()
         starting_song_composer_thread.join()
 
         current_song = starting_song_composer_thread.get_generated_song()
 
         while self.running:
-
+            self.gui.set_initial_synth_parameters()
             self.music_composer_params = self.gui.get_music_composer_params()
             next_song_thread = MusicComposer(copy.copy(self.music_composer_params))
             next_song_thread.start()
 
             for part in current_song.get_structure_list():
 
-
+                self.gui.set_info_text_label("Playing song and generating a new one")
 
                 chord_progression = part.get_harmony_line()
                 melody_line = part.get_melody_line()
@@ -123,16 +126,16 @@ class MusicPlayer(Thread):
 
                     if self.running:
                         for note in notes_to_stop_playing:
-                            out_port.send(mido.Message('note_off', note=note))
+                            # out_port.send(mido.Message('note_off', note=note))
                             a.note_off(note)
 
                         for note in notes_to_play:
-                            out_port.send(mido.Message('note_on', note=note))
+                            # out_port.send(mido.Message('note_on', note=note))
                             a.note_on(note)
 
                     else:
                         for note in notes_playing:
-                            out_port.send(mido.Message('note_off', note=note))
+                            # out_port.send(mido.Message('note_off', note=note))
                             a.note_off(note)
 
                         return
@@ -143,9 +146,10 @@ class MusicPlayer(Thread):
                     time.sleep(TempoUtils.get_note_duration_from_bpm_seconds("eigth_note", self.music_player_params.get_tempo()))
 
                 for note in notes_playing:
-                    out_port.send(mido.Message('note_off', note=note))
+                    # out_port.send(mido.Message('note_off', note=note))
                     a.note_off(note)
 
+            self.gui.set_info_text_label("Generating a new one")
             next_song_thread.join()
             current_song = next_song_thread.get_generated_song()
 

@@ -25,7 +25,7 @@ class AudioEngine(Thread):
 						frames_per_buffer=bs * tpb)
 
 		m = PdManager(ch, ch, sr, 1)
-		libpd_open_patch('two_ops1poly.pd', './audioEngine')  # './audioEngine'  '.'
+		libpd_open_patch('two_ops1poly.pd', '.')  # './audioEngine'  '.'
 		data = stream.read(bs)
 
 		while 1:
@@ -52,8 +52,8 @@ class AudioEngine(Thread):
 		libpd_symbol('spam', "don't panic")
 
 
-# For testing purposes:
-#
+#For testing purposes:
+
 # a = AudioEngine()
 # a.start()
 # while(1):
