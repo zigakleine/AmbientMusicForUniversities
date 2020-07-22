@@ -4,7 +4,7 @@ class SynthParameters:
     def __init__(self):
         self.preset = 3
         self.delay_feedback = 0.2
-        self.delay_mix = 0.2
+        self.delay_mix = 0.3
         self.chorus_speed = 0.2
         self.chorus_depth = 0.2
         self.reverb_liveness = 0.7

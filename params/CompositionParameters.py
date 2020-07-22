@@ -16,7 +16,7 @@ class CompositionParameters:
         self.interval_consonance = 0.6  # 8
 
         # global parameters
-        self.mode = "MAJOR"
+        self.mode = "MINOR"
         self.part_length = 8
         self.melody_octave = 4
         self.key = "C"
@@ -82,7 +82,6 @@ class CompositionParameters:
     def set_note_extension_amount(self, new_note_extension_amount):
         self.note_extension_amount = new_note_extension_amount
 
-
     def get_average_interval(self):
         return self.average_interval
 
@@ -112,3 +111,11 @@ class CompositionParameters:
 
     def set_interval_consonance(self, new_interval_consonance):
         self.interval_consonance = new_interval_consonance
+
+    # harmony parameters
+
+    def get_harmony_resolution_intensity(self):
+        return self.harmony_resolution_intensity
+
+    def set_harmony_resolution_intensity(self, new_harmony_resolution_intensity):
+        self.harmony_resolution_intensity = new_harmony_resolution_intensity

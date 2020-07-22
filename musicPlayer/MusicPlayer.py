@@ -22,13 +22,9 @@ class MusicPlayer(Thread):
 
     def run(self):
 
-
         a = AudioEngine()
         a.start()
         self.gui.set_info_text_label("Audio engine init")
-
-
-
 
         # outputs = mido.get_output_names()
         # print(outputs)
@@ -41,7 +37,7 @@ class MusicPlayer(Thread):
 
         self.music_composer_params = self.gui.get_music_composer_params()
         starting_song_composer_thread = MusicComposer(copy.copy(self.music_composer_params))
-        self.gui.set_info_text_label("Generating song")
+        self.gui.set_info_text_label("Generating song...")
         starting_song_composer_thread.start()
         starting_song_composer_thread.join()
 
@@ -55,7 +51,7 @@ class MusicPlayer(Thread):
 
             for part in current_song.get_structure_list():
 
-                self.gui.set_info_text_label("Playing song and generating a new one")
+                self.gui.set_info_text_label("Playing current song and generating a new song...")
 
                 chord_progression = part.get_harmony_line()
                 melody_line = part.get_melody_line()
@@ -111,12 +107,12 @@ class MusicPlayer(Thread):
                             notes_to_extend.add(
                                 chord_progression[i].get_notes()[arpeggio_notes[current_arpeggio_note_index]].get_note_value())
 
-
-                    if not melody_line[i].get_note_value() == -1:
-                        if melody_line[i].is_note_extended():
-                            notes_to_extend.add(melody_line[i].get_note_value())
-                        else:
-                            notes_to_play.add(melody_line[i].get_note_value())
+                    if not part.get_is_intro_or_outro():
+                        if not melody_line[i].get_note_value() == -1:
+                            if melody_line[i].is_note_extended():
+                                notes_to_extend.add(melody_line[i].get_note_value())
+                            else:
+                                notes_to_play.add(melody_line[i].get_note_value())
 
                     notes_to_stop_playing = notes_playing - notes_to_extend
                     notes_playing = (notes_to_play | notes_to_extend)
@@ -138,10 +134,11 @@ class MusicPlayer(Thread):
                             # out_port.send(mido.Message('note_off', note=note))
                             a.note_off(note)
 
-                        return
+                        for note in notes_to_stop_playing:
+                            a.note_off(note)
 
-                    # print("on: ", notes_to_play)
-                    # print("off: ", notes_to_stop_playing)
+                        a.stop_running()
+                        return
 
                     time.sleep(TempoUtils.get_note_duration_from_bpm_seconds("eigth_note", self.music_player_params.get_tempo()))
 
@@ -149,7 +146,7 @@ class MusicPlayer(Thread):
                     # out_port.send(mido.Message('note_off', note=note))
                     a.note_off(note)
 
-            self.gui.set_info_text_label("Generating a new one")
+            self.gui.set_info_text_label("Generating song...")
             next_song_thread.join()
             current_song = next_song_thread.get_generated_song()
 

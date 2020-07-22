@@ -191,9 +191,9 @@ class Gui:
         harmony_controls_frame_height = self.harmony_controls_frame.get_frame().winfo_height()
         harmony_controls_frame_width = self.harmony_controls_frame.get_frame().winfo_width()
         harmony_controls_frame_titles = ["Resolution intensity"]
-        harmony_controls_frame_commands = [None]
+        harmony_controls_frame_commands = [self.on_harmony_resolution_intensity_slider_change]
         harmony_controls_frame_ranges = [(0, 1)]
-        harmony_controls_frame_initial_values = [0.8]
+        harmony_controls_frame_initial_values = [self.music_composer_params.get_harmony_resolution_intensity()]
 
         self.harmony_controls_slider_group = SliderGroup(self.harmony_controls_frame.get_frame(), 1,
                                                          harmony_controls_frame_height, harmony_controls_frame_width,
@@ -254,8 +254,6 @@ class Gui:
 
         self.root.mainloop()
 
-
-
     def on_start_button_clicked(self):
         if self.player is None:
             self.player = MusicPlayer(self.music_player_params, self.music_composer_params, self)
@@ -270,6 +268,9 @@ class Gui:
     def on_tempo_slider_change(self, new_tempo):
         self.music_player_params.set_tempo(int(new_tempo))
         libpd_float("tempo", float(new_tempo))
+
+    def on_harmony_resolution_intensity_slider_change(self, new_harmony_resolution_intensity):
+        self.music_composer_params.set_harmony_resolution_intensity(new_harmony_resolution_intensity)
 
     def on_melody_to_harmony_fit_slider_change(self, new_melody_to_harmony_fit):
         self.music_composer_params.set_melody_to_harmony_fit(float(new_melody_to_harmony_fit))

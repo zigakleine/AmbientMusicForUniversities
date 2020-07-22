@@ -108,10 +108,10 @@ class Part:
     def get_type_of_part(self):
         return self.type_of_part
 
-    def set_is_intro_or_outro(self, is_intro_outro):
-        self.is_intro_or_outro = is_intro_outro
+    def set_is_intro_or_outro(self, new_is_intro_outro):
+        self.is_intro_or_outro = new_is_intro_outro
 
-    def is_intro_outro(self):
+    def get_is_intro_or_outro(self):
         return self.is_intro_or_outro
 
     def get_random_arpeggiation_sequence(self):

@@ -1,3 +1,6 @@
+import copy
+
+
 class Song():
     def __init__(self, mode, key):
 
@@ -19,8 +22,10 @@ class Song():
 
         self.parts_set = set()
 
-        for part in self.structure_string:
-            self.parts_set.add(part)
+        structure_parts = self.structure_string.split(",")
+
+        for part in structure_parts:
+            self.parts_set.add(part.split("_")[0])
 
     def get_parts_set(self):
         return self.parts_set
@@ -33,9 +38,20 @@ class Song():
 
     def construct_structure_list(self):
         self.structure_list = []
+        structure_parts = self.structure_string.split(",")
 
-        for part in self.structure_string:
-            self.structure_list.append(self.parts_dict[part])
+        for part in structure_parts:
+
+            part_info = part.split("_")
+
+            part_to_append = copy.deepcopy(self.parts_dict[part_info[0]])
+
+            if part_info[1] == "n":
+                part_to_append.set_is_intro_or_outro(True)
+            elif part_info[1] == "m":
+                part_to_append.set_is_intro_or_outro(False)
+
+            self.structure_list.append(part_to_append)
 
     def get_structure_list(self):
         return self.structure_list

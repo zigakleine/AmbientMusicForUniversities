@@ -9,6 +9,7 @@ class AudioEngine(Thread):
 	def __init__(self):
 		Thread.__init__(self)
 		self.daemon = True
+		self.running = True
 
 	def run(self):
 		p = pyaudio.PyAudio()
@@ -28,7 +29,7 @@ class AudioEngine(Thread):
 		libpd_open_patch('two_ops1poly.pd', '.')  # './audioEngine'  '.'
 		data = stream.read(bs)
 
-		while 1:
+		while self.running:
 			outp = m.process(data)
 			stream.write(outp.tobytes())
 
@@ -36,7 +37,8 @@ class AudioEngine(Thread):
 		p.terminate()
 		libpd_release()
 
-
+	def stop_running(self):
+		self.running = False
 
 	def note_on(self, note):
 		libpd_noteon(1, note, 64)
